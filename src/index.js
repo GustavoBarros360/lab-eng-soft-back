@@ -4,8 +4,10 @@ const sellerRoutes = require("./routes/seller");
 
 const app = express();
 app.use(express.json());
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
+
+app.route("/").get((req, res) => res.send("Hello"));
 
 testRoutes(app);
 sellerRoutes(app);
-app.listen(PORT, () => console.log("server is running on port 4000"));
+app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
