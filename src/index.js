@@ -1,9 +1,11 @@
 const express = require("express");
 const testRoutes = require("./routes/test");
 const sellerRoutes = require("./routes/seller");
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 const PORT = process.env.PORT || 4000;
 
 app.route("/").get((req, res) => res.send("Hello"));
