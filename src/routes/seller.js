@@ -4,11 +4,9 @@ const sellerRoutes = (app) => {
   app.route("/create-seller").post((req, res) => {
     const { name, age } = req.body;
 
-    // console.log(name, age);
     sellers.push(req.body);
-    console.log(sellers);
 
-    res.send();
+    res.send(sellers);
   });
 
   app.route("/list-sellers").get((req, res) => {
