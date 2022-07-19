@@ -1,6 +1,9 @@
 const express = require("express");
 const testRoutes = require("./routes/test");
 const sellerRoutes = require("./routes/seller");
+const clientRoutes = require("./routes/client");
+const productRoutes = require("./routes/product");
+const categoryRoutes = require("./routes/category");
 const cors = require("cors");
 
 const app = express();
@@ -12,4 +15,7 @@ app.route("/").get((req, res) => res.send("Hello"));
 
 testRoutes(app);
 sellerRoutes(app);
+clientRoutes(app);
+productRoutes(app);
+categoryRoutes(app);
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
