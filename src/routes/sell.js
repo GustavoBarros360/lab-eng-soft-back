@@ -22,9 +22,9 @@ async function get(sql) {
   console.log("sucesso");
 }
 
-async function deleteProduct(sql) {
+async function deleteProduct(sql, values) {
   try {
-    await db.query(sql);
+    await db.query(sql, values);
     console.log(result.rows);
   } catch (error) {
     console.log(error);
@@ -73,8 +73,8 @@ const ProductRoutes = (app) => {
 
     Products.push(req.body);
 
-    const sql = `UPDATE Venda SET (data_venda, id_venda_produto, id_cliente, id_vendedor) VALUES ($1, $2, $3, $4) WHERE numero_venda = ${id}`;
-    const values = [data, idvendaprod, idcliente, id_vendedor];
+    const sql = `UPDATE Venda SET data_venda =$1, id_venda_produto=$2, id_cliente=$3, id_vendedor=$4 WHERE numero_venda = $5`;
+    const values = [data, idvendaprod, idcliente, id_vendedor, id];
     await update(sql, values);
 
     res.send(Products);
@@ -82,8 +82,9 @@ const ProductRoutes = (app) => {
 
   app.route("/delete-Product/:id").delete(async (req, res) => {
     const { id } = req.params;
-    const sql = `DELETE FROM Venda WHERE id_venda = ${id}`;
-    await deleteProduct(sql);
+    const sql = `DELETE FROM Venda WHERE id_venda = $1`;
+    const values =[id]
+    await deleteProduct(sql, values);
 
     res.send(Products);
   });

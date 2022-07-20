@@ -22,9 +22,9 @@ async function get(sql) {
   console.log("sucesso");
 }
 
-async function deleteClient(sql) {
+async function deleteClient(sql, values) {
   try {
-    await db.query(sql);
+    await db.query(sql, values);
     console.log(result.rows);
   } catch (error) {
     console.log(error);
@@ -85,7 +85,7 @@ const clientRoutes = (app) => {
     const { id } = req.params;
 
     clients.push(req.body);
-    const sql = `UPDATE Cliente SET (nome_cliente, data_registro, cpf, rua, numero, complemento, cep, telefone1) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) WHERE id_cliente = ${id}`;
+    const sql = `UPDATE Cliente SET nome_cliente = $1, data_registro = $2, cpf = $3, rua = $4, numero = $5, complemento = $6, cep = $7, telefone1 = $8 WHERE id_cliente = $9`;
     const values = [
       name,
       data_reg,
@@ -95,6 +95,7 @@ const clientRoutes = (app) => {
       complement,
       cep,
       phone1,
+      id
     ];
     await update(sql, values);
 
@@ -103,8 +104,9 @@ const clientRoutes = (app) => {
 
   app.route("/delete-client/:id").delete(async (req, res) => {
     const { id } = req.params;
-    const sql = `DELETE FROM Cliente WHERE id_cliente = ${id}`;
-    await deleteClient(sql);
+    const sql = `DELETE FROM Cliente WHERE id_cliente = $1`;
+    const values = [id]
+    await deleteClient(sql, values);
 
     res.send(clients);
   });

@@ -23,9 +23,9 @@ async function get(sql) {
   console.log("sucesso");
 }
 
-async function deleteCategory(sql) {
+async function deleteCategory(sql, values) {
   try {
-    await db.query(sql);
+    await db.query(sql, valeus);
     console.log(result.rows);
   } catch (error) {
     console.log(error);
@@ -74,8 +74,8 @@ const categoryRoutes = (app) => {
 
     categorys.push(req.body);
 
-    const sql = `UPDATE Categoria SET (nome_categoria) VALUES ($1) WHERE id_categoria = ${id}`;
-    const values = [name];
+    const sql = `UPDATE Categoria SET nome_categoria = $1  WHERE id_categoria = $2`;
+    const values = [name, id];
     await update(sql, values);
 
     res.send(categorys);
@@ -83,8 +83,9 @@ const categoryRoutes = (app) => {
 
   app.route("/delete-category/:id").delete(async (req, res) => {
     const { id } = req.params;
-    const sql = `DELETE FROM Categoria WHERE id_categoria = ${id}`;
-    await deleteCategory(sql);
+    const sql = `DELETE FROM Categoria WHERE id_categoria = $1`;
+    const values = [id]
+    await deleteCategory(sql,values);
 
     res.send(categorys);
   });

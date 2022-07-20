@@ -21,9 +21,9 @@ async function get(sql) {
   console.log("sucesso");
 }
 
-async function deleteSeller(sql) {
+async function deleteSeller(sql, values) {
   try {
-    await db.query(sql);
+    await db.query(sql, values);
     console.log(result.rows);
   } catch (error) {
     console.log(error);
@@ -72,8 +72,8 @@ const sellerRoutes = (app) => {
 
     sellers.push(req.body);
 
-    const sql = `UPDATE Vendedor SET (nome_vendedor, data_admissao, salario_liquido, salario_bruto, percentual_comissao) VALUES ($1, $2, $3, $4, $5) WHERE id_vendedor = ${id}`;
-    const values = [name, date, salary, totalSalary, comission];
+    const sql = `UPDATE Vendedor SET nome_vendedor = $1, data_admissao = $2, salario_liquido = $3, salario_bruto = $4, percentual_comissao=$5 WHERE id_vendedor = $6`;
+    const values = [name, date, salary, totalSalary, comission, id];
     await update(sql, values);
 
     res.send(sellers);
@@ -81,8 +81,9 @@ const sellerRoutes = (app) => {
 
   app.route("/delete-seller/:id").delete(async (req, res) => {
     const { id } = req.params;
-    const sql = `DELETE FROM Vendedor WHERE id_vendedor = ${id}`;
-    await deleteSeller(sql);
+    const sql = `DELETE FROM Vendedor WHERE id_vendedor = $1`;
+    const values =[id]
+    await deleteSeller(sql,values);
 
     res.send(sellers);
   });
