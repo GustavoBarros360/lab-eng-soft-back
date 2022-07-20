@@ -17,8 +17,14 @@ async function get(sql) {
   } catch (error) {
     console.log(error);
   }
+}
 
-  console.log("sucesso");
+async function getWithCategory(sql) {
+  try {
+    return await db.query(sql);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function deleteProduct(sql) {
@@ -59,8 +65,16 @@ const productRoutes = (app) => {
     res.send(Products);
   });
 
-  app.route("/list-Products").get(async (req, res) => {
-    const sql = `SELECT * FROM Produto`;
+  app.route("/list-products").get(async (req, res) => {
+    const sql = `select * from produto`;
+    const result = await get(sql);
+
+    res.send(result.rows);
+  });
+
+  app.route("/list-products-category").get(async (req, res) => {
+    const sql = `select nome_produto, nome_categoria, valor, qtde_estoque
+    from produto inner join categoria on produto.id_categoria = categoria.id_categoria;`;
     const result = await get(sql);
 
     res.send(result.rows);
