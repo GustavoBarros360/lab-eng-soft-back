@@ -47,13 +47,13 @@ const productRoutes = (app) => {
   const Products = [];
 
   app.route("/create-product").post(async (req, res) => {
-    const { name, price, category, quantity, categoryId } = req.body;
+    const { name, price, quantity, categoryId } = req.body;
     const id = uuid.v4();
 
     Products.push(req.body);
 
-    const sql = `INSERT INTO Produto (id_produto, nome_produto, valor, categoria, qtde_estoque, id_categoria) VALUES ($1, $2, $3, $4, $5, $6)`;
-    const values = [id, name, price, category, quantity, categoryId];
+    const sql = `INSERT INTO Produto (id_produto, nome_produto, valor, qtde_estoque, id_categoria) VALUES ($1, $2, $3, $4, $5)`;
+    const values = [id, name, price, quantity, categoryId];
     await insert(sql, values);
 
     res.send(Products);

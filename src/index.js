@@ -4,6 +4,7 @@ const sellerRoutes = require("./routes/seller");
 const clientRoutes = require("./routes/client");
 const productRoutes = require("./routes/product");
 const categoryRoutes = require("./routes/category");
+const sellRoutes = require("./routes/sell");
 const cors = require("cors");
 
 const app = express();
@@ -18,4 +19,5 @@ sellerRoutes(app);
 clientRoutes(app);
 productRoutes(app);
 categoryRoutes(app);
+sellRoutes(app);
 app.listen(PORT, () => console.log(`server is running on port ${PORT}`));
