@@ -13,7 +13,7 @@ async function insert(sql, values) {
 
 async function get(sql) {
   try {
-    const result = await db.query(sql);
+    return await db.query(sql);
     console.log(result.rows);
   } catch (error) {
     console.log(error);
@@ -74,9 +74,9 @@ const clientRoutes = (app) => {
 
   app.route("/list-clients").get(async (req, res) => {
     const sql = `SELECT * FROM Cliente`;
-    await get(sql);
+    const result = await get(sql);
 
-    res.send(clients);
+    res.send(result.rows);
   });
 
   app.route("/update-client/:id").put(async (req, res) => {
