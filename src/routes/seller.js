@@ -3,12 +3,10 @@ const uuid = require("uuid");
 
 async function insert(sql, values) {
   try {
-    await db.query(sql, values);
+    return await db.query(sql, values);
   } catch (error) {
     console.log(error);
   }
-
-  console.log("Sucesso");
 }
 
 async function get(sql) {
@@ -17,46 +15,35 @@ async function get(sql) {
   } catch (error) {
     console.log(error);
   }
-
-  console.log("sucesso");
 }
 
-async function deleteSeller(sql) {
+async function deleteSeller(sql, values) {
   try {
-    await db.query(sql);
-    console.log(result.rows);
+    return await db.query(sql, values);
   } catch (error) {
     console.log(error);
   }
-
-  console.log("deletado");
 }
 
 async function update(sql, values) {
   try {
     const result = await db.query(sql, values);
-    console.log(result.rows);
+    return result;
   } catch (error) {
     console.log(error);
   }
-
-  console.log("atualizado");
 }
 
 const sellerRoutes = (app) => {
-  const sellers = [];
-
   app.route("/create-seller").post(async (req, res) => {
     const { name, salary, totalSalary, date, comission } = req.body;
     const id = uuid.v4();
 
-    sellers.push(req.body);
-
     const sql = `INSERT INTO Vendedor (id_vendedor, nome_vendedor, data_admissao, salario_liquido, salario_bruto, percentual_comissao) VALUES ($1, $2, $3, $4, $5, $6)`;
     const values = [id, name, date, salary, totalSalary, comission];
-    await insert(sql, values);
+    const result = await insert(sql, values);
 
-    res.send(sellers);
+    res.send(result.rows);
   });
 
   app.route("/list-sellers").get(async (req, res) => {
@@ -70,21 +57,20 @@ const sellerRoutes = (app) => {
     const { name, salary, totalSalary, date, comission } = req.body;
     const { id } = req.params;
 
-    sellers.push(req.body);
+    const sql = `UPDATE Vendedor SET nome_vendedor = $1, data_admissao = $2, salario_liquido = $3, salario_bruto = $4, percentual_comissao=$5 WHERE id_vendedor = $6`;
+    const values = [name, date, salary, totalSalary, comission, id];
+    const result = await update(sql, values);
 
-    const sql = `UPDATE Vendedor SET (nome_vendedor, data_admissao, salario_liquido, salario_bruto, percentual_comissao) VALUES ($1, $2, $3, $4, $5) WHERE id_vendedor = ${id}`;
-    const values = [name, date, salary, totalSalary, comission];
-    await update(sql, values);
-
-    res.send(sellers);
+    res.send(result.rows);
   });
 
   app.route("/delete-seller/:id").delete(async (req, res) => {
     const { id } = req.params;
-    const sql = `DELETE FROM Vendedor WHERE id_vendedor = ${id}`;
-    await deleteSeller(sql);
+    const sql = `DELETE FROM Vendedor WHERE id_vendedor = $1`;
+    const values = [id];
+    const result = await deleteSeller(sql, values);
 
-    res.send(sellers);
+    res.send(result.rows);
   });
 };
 
